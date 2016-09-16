@@ -17,11 +17,15 @@ function render(state) {
     map[state.exit.x][state.exit.y] = " ";
     state.players.forEach(bot => map[bot.position.x][bot.position.y] = "\u001b[" + colors[bot.team] + "m•\u001b[0m");
 
-    console.log("\033[2J");
+    console.log("\x1B[2J");
     console.log(map.map(line => line.join(" ")).join("\n"));
     if (state.winners.length) {
-        console.log(state.winners);
+        console.log(state.winners.map(w => w.name));
     }
+    if (state.winner) {
+        console.log(state.winner + " team wins");
+    }
+    console.log(state.players.map(player => player.name + " " + player.errors + " errors"));
 }
 
 module.exports = render;

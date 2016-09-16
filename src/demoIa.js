@@ -1,10 +1,10 @@
 var demoIa = {
     getName: function () {
-        return "Felix";
+        return "Bot" + Math.round(Math.random() * 100);
     },
 
-    onFriendFindExit: function (exit) {
-
+    onFriendWins: function (exit) {
+        console.log(exit);
     },
 
     onResponseX: function (position) {
@@ -12,17 +12,24 @@ var demoIa = {
     },
 
     onResponseY: function (position) {
+        console.log(position);
     },
 
     action: function () {
+        var dx = Math.random() * 3 - 1.5;
+        var dy = Math.random() * 3 - 1.5;
+
         let move = {
             action: "move",
-            params: { x: 0.5 - Math.random(), y: 0.5 - Math.random() }
+            params: {
+                x: Math.round(dx),
+                y: Math.round(dy)
+            }
         };
         let ask = {
             action: "ask",
             params: "x"
-        }
+        };
         return move;
     }
 }

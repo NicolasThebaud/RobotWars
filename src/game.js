@@ -5,7 +5,8 @@ function initPlayer(ia) {
             y: 0
         },
         name: ia.getName(),
-        ia: ia
+        ia: ia,
+        errors: 0
     };
 }
 
@@ -15,6 +16,12 @@ function createTeamDispatcher(nbTeams) {
             team: index % nbTeams
         });
     };
+}
+
+function groupByTeam(teams, player) {
+    teams[player.team] = teams[player.team] || [];
+    teams[player.team].push(player);
+    return teams;
 }
 
 function protectIaMethod(subject, methodName) {
@@ -66,6 +73,7 @@ function execute({ action, params, subject, env }) {
     var fn = actions[action];
     if (!fn) {
         console.warn(`no action ${action}`);
+        return subject;
     }
     return fn(subject, params, env);
 }
@@ -79,21 +87,28 @@ var game = {
             return acc;
         }, 1);
 
-        const mapSize = ias.length * 5;
+        const mapSize = ias.length * 1;
 
         const exit = {
             x: Math.floor(Math.random() * mapSize),
             y: Math.floor(Math.random() * mapSize)
         }
 
+        const players = ias
+            .map(initPlayer)
+            .map(createTeamDispatcher(nbTeams));
+
+        const teams = players.reduce(groupByTeam, {});
+
         return {
-            players: ias
-                .map(initPlayer)
-                .map(createTeamDispatcher(nbTeams)),
+            players: players,
+            teams: teams,
             exit: exit,
             mapSize: mapSize,
-            winners: []
-        }
+            winners: [],
+            winnersByTeam: {},
+            nbTeams: nbTeams
+        };
     },
 
     update: function (state) {
@@ -105,7 +120,7 @@ var game = {
         function isWinner(exit) {
             return (player) => player.position.x === exit.x && player.position.y === exit.y;
         }
-        state.players = state
+        const updatedPlayers = state
             .players
             .map(bot => {
                let action = protectIaMethod(bot, "action")();
@@ -118,18 +133,30 @@ var game = {
             })
             .map(execute);
 
-        let turnWinners = state
-            .players
+        const roundWinners = updatedPlayers
             .filter(isWinner(state.exit))
-            .map(bot => bot.name);
 
-        state.winners = state.winners.concat(turnWinners);
+        roundWinners.forEach((winner) => {
+            state.teams[winner.team].forEach((player) => {
+                protectIaMethod(player, "onFriendWins")(state.exit);
+            });
+        });
 
-        state.players = state
-            .players
-            .filter(not(isWinner(state.exit)))
+        const winners = state.winners.concat(roundWinners);
 
-        return state;
+        const winnersByTeam = winners.reduce(groupByTeam, {});
+
+        const winningTeam = Object.keys(winnersByTeam).reduce(function (winningTeam, team) {
+            const won = winnersByTeam[team].length === state.teams[team].length;
+            return winningTeam || (won ? team : false);
+        }, false);
+
+        return Object.assign({}, state, {
+            players: updatedPlayers.filter(not(isWinner(state.exit))),
+            winners: winners,
+            winnersByTeam: winnersByTeam,
+            winner: winningTeam
+        });
     }
 };
 
