@@ -46,7 +46,7 @@ var actions = {
         for (let i of ["x", "y"]) {
             if (moves[i] !== 0) {
                 let newPos = clone.position[i] + (moves[i] > 0 ? 1 : -1);
-                clone.position[i] = Math.min(Math.max(newPos, 0), env.mapSize - 1);
+                clone.position[i] = newPos;
             }
         }
 
@@ -78,6 +78,23 @@ function execute({ action, params, subject, env }) {
     return fn(subject, params, env);
 }
 
+function stateChecker(mapSize) {
+    return function checkState(player) {
+        let newPosition = Object.assign({}, player.position);
+        let maxIndex = mapSize - 1;
+
+        newPosition.x = Math.max(Math.min(newPosition.x, maxIndex), 0);
+        newPosition.y = Math.max(Math.min(newPosition.y, maxIndex), 0);
+
+        if (newPosition.x !== player.position.x || newPosition.y !== player.position.y) {
+            player.errors++;
+        }
+        player.position = newPosition;
+
+        return player;
+    }
+}
+
 var game = {
     init: function (ias) {
         const nbTeams = [2, 3, 4].reduce((acc, val) => {
@@ -87,7 +104,7 @@ var game = {
             return acc;
         }, 1);
 
-        const mapSize = ias.length * 1;
+        const mapSize = Math.max(ias.length * 1, 5);
 
         const exit = {
             x: Math.floor(Math.random() * mapSize),
@@ -131,7 +148,8 @@ var game = {
                    env: state
                };
             })
-            .map(execute);
+            .map(execute)
+            .map(stateChecker(state.mapSize));
 
         const roundWinners = updatedPlayers
             .filter(isWinner(state.exit))
