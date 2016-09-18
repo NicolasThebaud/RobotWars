@@ -1,31 +1,71 @@
+import snabbdom from "snabbdom";
+import h from "snabbdom/h";
+import classes from "snabbdom/modules/class";
+import style from "snabbdom/modules/style";
+
+const container = document.getElementById("main").getContext("2d");
+const playersInfoPanel = document.getElementById("players-info");
+
+let previousDOM;
+
+const patch = snabbdom.init([
+    classes,
+    style
+]);
+
 let colors = [
-    31,
-    32,
-    34,
-    33,
-    36
-]
+    "rgb(203, 30, 30)",
+    "rgb(30, 99, 203)",
+    "rgb(47, 180, 38)",
+    "rgb(180, 38, 158)"
+];
+
 function render(state) {
-    var map = [];
-    for (let x = 0; x < state.mapSize; x++) {
-        for (let y = 0; y < state.mapSize; y++) {
-            map[x] = map[x] || [];
-            map[x][y] = "█";
-        }
+    let pixelSize = 10;
+
+    container.fillStyle = "#fff";
+    container.fillRect(0, 0, 100, 100);
+
+    container.fillStyle = "#000";
+    container.fillRect(state.exit.x * pixelSize, state.exit.y * pixelSize, pixelSize, pixelSize);
+
+    state
+        .players
+        .forEach(bot => {
+            container.fillStyle = colors[bot.team];
+
+            container.beginPath();
+            container.arc(
+                (0.5 + bot.position.x) * pixelSize,
+                (0.5 + bot.position.y) * pixelSize,
+                pixelSize / 2,
+                0,
+                2 * Math.PI,
+                false
+            );
+            container.fill();
+            //container.fillRect(bot.position.x * pixelSize, bot.position.y * pixelSize, pixelSize, pixelSize)
+        });
+
+    function playerRenderer(winner) {
+        return player => h("tr.player", { class: { winner: winner }}, [
+            h("td", [player.name + " "]),
+            h("td", [h("span.team", { style: { "background-color": colors[player.team] }})]),
+            h("td", [player.errors + " errors"])
+        ]);
     }
 
-    map[state.exit.x][state.exit.y] = " ";
-    state.players.forEach(bot => map[bot.position.x][bot.position.y] = "\u001b[" + colors[bot.team] + "m•\u001b[0m");
+    const playersInfo = h(
+        "table",
+        [h("tbody", []
+            .concat(state.winners.map(playerRenderer(true)))
+            .concat(state.players.map(playerRenderer(false)))
+        )]
+    );
 
-    console.log("\x1B[2J");
-    console.log(map.map(line => line.join(" ")).join("\n"));
-    if (state.winners.length) {
-        console.log(state.winners.map(w => w.name));
-    }
-    if (state.winner) {
-        console.log(state.winner + " team wins");
-    }
-    console.log(state.players.map(player => player.name + " " + player.errors + " errors"));
+    let dom = previousDOM ? previousDOM : playersInfoPanel;
+
+    previousDOM = patch(dom, playersInfo);
 }
 
 module.exports = render;
