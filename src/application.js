@@ -20,7 +20,7 @@ const ias = req.keys().map(function(key) {
         if (state.winner) {
             return;
         }
-        setTimeout(step, 500);
+        setTimeout(step, 60);
     }
 
     step();

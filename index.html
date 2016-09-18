@@ -4,18 +4,48 @@
     <meta charset="UTF-8">
     <title></title>
 <style>
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
     body {
         font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
+        padding: 1em;
     }
+
+    table {
+        border-collapse: collapse;
+    }
+    td {
+        padding: 0.2em;
+    }
+
     .player.winner {
-        background-color: green;
+        background-color: #4fe019;
     }
-    .player .team {
+
+    .team {
         display: inline-block;
         width: 1em;
         height: 1em;
         border-radius: 0.5em;
     }
+
+    #congrats {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: table;
+        background-color: #000;
+        color: white;
+    }
+    .middle {
+        display: table-cell;
+        vertical-align: middle;
+    }
+
 </style>
 </head>
 <body>
