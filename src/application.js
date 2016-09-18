@@ -1,10 +1,14 @@
 const game = require("./game");
-const demoIa = require("./demoIa");
 const renderConsole = require("./renderConsole");
 const renderDOM = require("./renderDOM");
 
+const req = require.context("./bots", true, /^(.*\.(js$))$/igm);
+const ias = req.keys().map(function(key) {
+    return req(key);
+});
+
 (function main() {
-    let state = game.init([demoIa, demoIa, demoIa, demoIa, demoIa]);
+    let state = game.init(ias);
 
     function step() {
         state = game.update(state);
