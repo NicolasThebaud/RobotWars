@@ -28,10 +28,10 @@ function protectIaMethod(subject, methodName) {
     if (!subject.ia[methodName]) {
         return function () {};
     }
-    return function (params) {
+    return function () {
         let res = false;
         try {
-            res = subject.ia[methodName](params);
+            res = subject.ia[methodName].apply(subject.ia, arguments);
         } catch (e) {
             console.error(e);
             subject.errors++;
@@ -124,7 +124,8 @@ var game = {
             mapSize: mapSize,
             winners: [],
             winnersByTeam: {},
-            nbTeams: nbTeams
+            nbTeams: nbTeams,
+            round: 0
         };
     },
 
@@ -140,7 +141,7 @@ var game = {
         const updatedPlayers = state
             .players
             .map(bot => {
-               let action = protectIaMethod(bot, "action")();
+               let action = protectIaMethod(bot, "action")(state.mapSize, state.round);
                return {
                    action: action.action,
                    params: action.params,
@@ -173,7 +174,8 @@ var game = {
             players: updatedPlayers.filter(not(isWinner(state.exit))),
             winners: winners,
             winnersByTeam: winnersByTeam,
-            winner: winningTeam
+            winner: winningTeam,
+            round: state.round + 1
         });
     }
 };

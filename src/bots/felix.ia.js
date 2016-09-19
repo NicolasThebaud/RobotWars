@@ -1,6 +1,6 @@
 var demoIa = {
     getName: function () {
-        return "Bot" + Math.round(Math.random() * 100);
+        return "Felix";
     },
 
     onFriendWins: function (exit) {
@@ -15,7 +15,7 @@ var demoIa = {
         console.log(position);
     },
 
-    action: function () {
+    action: function (mapSize, round) {
         var dx = Math.random() * 3 - 1.5;
         var dy = Math.random() * 3 - 1.5;
 
@@ -30,7 +30,7 @@ var demoIa = {
             action: "ask",
             params: "x"
         };
-        return move;
+        return round % 2 === 0 ? ask : move;
     }
 }
 
