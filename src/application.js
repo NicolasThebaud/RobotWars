@@ -10,10 +10,11 @@ const ias = req.keys().map(function(key) {
 (function main() {
     let state = game.init(ias);
 
+    renderDOM.init(state.mapSize);
     function step() {
         state = game.update(state);
         if (typeof window !== "undefined") {
-            renderDOM(state);
+            renderDOM.render(state);
         } else {
             renderConsole(state);
         }

@@ -3,9 +3,9 @@ import h from "snabbdom/h";
 import classes from "snabbdom/modules/class";
 import style from "snabbdom/modules/style";
 
-const container = document.getElementById("main");
-const context = container.getContext("2d");
-const playersInfoPanel = document.getElementById("players-info");
+let context;
+let playersInfoPanel;
+const pixelSize = 20;
 
 let previousDOM;
 
@@ -21,19 +21,20 @@ let colors = [
     "rgb(180, 38, 158)"
 ];
 
-let maxHeight = parseInt(window.getComputedStyle(document.body).height, 10) * 0.9;
-let maxWidth = parseInt(window.getComputedStyle(document.body).width, 10) * 0.9;
+function init(mapSize) {
+    const container = document.getElementById("main");
+    context = container.getContext("2d");
+    playersInfoPanel = document.getElementById("players-info")
 
-container.width = maxWidth;
-container.height = maxHeight;
-container.style.width = maxWidth;
-container.style.height = maxHeight;
+    container.width = pixelSize * mapSize;
+    container.height = pixelSize * mapSize;
+    container.style.width = pixelSize * mapSize;
+    container.style.height = pixelSize * mapSize;
+}
 
 function render(state) {
-    let pixelSize = 20;
-
     context.fillStyle = "#fff";
-    context.fillRect(0, 0, maxHeight, maxWidth);
+    context.fillRect(0, 0, context.canvas.height, context.canvas.width);
 
     context.fillStyle = "#000";
     context.fillRect(state.exit.x * pixelSize, state.exit.y * pixelSize, pixelSize, pixelSize);
@@ -60,7 +61,7 @@ function render(state) {
         return player => h("tr.player", { class: { winner: winner }}, [
             h("td", [player.name + " "]),
             h("td", [h("span.team", { style: { "background-color": colors[player.team] }})]),
-            h("td", [player.errors + " errors"])
+            h("td.errors", [player.errors + " errors"])
         ]);
     }
 
@@ -80,11 +81,14 @@ function render(state) {
         let congrats = document.createElement("div");
         congrats.id = "congrats";
         congrats.innerHTML = `<div class="middle">
-            <span class="team" style="background-color: ${colors[state.winner]}"></span> team wins
+            <span class="team" style="background-color: ${colors[state.winner]}"></span> Win!
         </div>`;
 
-        document.body.appendChild(congrats);
+        document.getElementById("canvas").appendChild(congrats);
     }
 }
 
-module.exports = render;
+module.exports = {
+    init,
+    render
+};

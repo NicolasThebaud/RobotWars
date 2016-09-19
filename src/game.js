@@ -104,7 +104,7 @@ var game = {
             return acc;
         }, 1);
 
-        const mapSize = Math.max(ias.length * 1, 5);
+        const mapSize = Math.max(ias.length * 1, 10);
 
         const exit = {
             x: Math.floor(Math.random() * mapSize),

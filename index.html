@@ -9,15 +9,27 @@
         margin: 0;
     }
     body {
+        font-size: 1.2em;
         font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
-        padding: 1em;
+        display: flex;
     }
+
+    #canvas {
+        flex: 1;
+        position: relative;
+        text-align: center;
+    }
+    #canvas canvas {
+        margin: 1em;
+        border: 1px solid #CCC;
+    }
+
 
     table {
         border-collapse: collapse;
     }
     td {
-        padding: 0.2em;
+        padding: 0.5em;
     }
 
     .player.winner {
@@ -40,6 +52,8 @@
         display: table;
         background-color: #000;
         color: white;
+        text-align: center;
+        font-size: 8em;
     }
     .middle {
         display: table-cell;
@@ -49,9 +63,12 @@
 </style>
 </head>
 <body>
-    <canvas id="main">
-    </canvas>
-    <div id="players-info"></div>
+    <div id="canvas">
+        <canvas id="main"></canvas>
+    </div>
+    <div id="meta">
+        <div id="players-info"></div>
+    </div>
     <script src="./build/application.js"></script>
 </body>
 </html>
