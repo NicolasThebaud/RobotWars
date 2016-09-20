@@ -4,18 +4,25 @@ var demoIa = {
     },
 
     onFriendWins: function (exit) {
+        //exit est la position de la sortie { x: .., y: .. }
         console.log(exit);
     },
 
     onResponseX: function (position) {
+        //1 je suis trop à gauche
+        //-1 je suis trop à droite
+        //0 je suis en face de la sortie
         console.log(position);
     },
 
     onResponseY: function (position) {
+        //1 je suis trop bas
+        //-1 je suis trop haut
+        //0 je suis en face de la sortie
         console.log(position);
     },
 
-    action: function (mapSize, round) {
+    action: function (position, mapSize, round) {
         var dx = Math.random() * 3 - 1.5;
         var dy = Math.random() * 3 - 1.5;
 

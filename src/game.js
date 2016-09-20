@@ -141,7 +141,7 @@ var game = {
         const updatedPlayers = state
             .players
             .map(bot => {
-               let action = protectIaMethod(bot, "action")(state.mapSize, state.round);
+               let action = protectIaMethod(bot, "action")( { x: bot.position.x, y: bot.position.y }, state.mapSize, state.round);
                return {
                    action: action.action,
                    params: action.params,

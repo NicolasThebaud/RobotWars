@@ -103,6 +103,8 @@ Dans tous les cas, une erreur va paralyser votre joueur pour le tour en cours.
 
 Vous trouverez un exemple d'IA (complétement stupide) à ce chemin `src/bots/felix.ia.js`. Inspirez vous en pour développer votre IA.
 
+Vous pouvez ajouter autant d'IA que vous voudrez dans le repertoire `src/bots` ils seront ajoutés dans le jeux. En revanche, vous ne m'enverrez qu'une seule de ces IA pour le jeu final.
+
 ## Les main dans le code
 
 ### Installation
