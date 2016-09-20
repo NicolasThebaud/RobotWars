@@ -103,7 +103,7 @@ Dans tous les cas, une erreur va paralyser votre joueur pour le tour en cours.
 
 Vous trouverez un exemple d'IA (complétement stupide) à ce chemin `src/bots/felix.ia.js`. Inspirez vous en pour développer votre IA.
 
-Vous pouvez ajouter autant d'IA que vous voudrez dans le repertoire `src/bots` ils seront ajoutés dans le jeux. En revanche, vous ne m'enverrez qu'une seule de ces IA pour le jeu final.
+Vous pouvez ajouter autant d'IA que vous voudrez dans le repertoire `src/bots` ils seront ajoutés dans le jeux. En revanche, une seule de ces IA pourra jouer pour le match final.
 
 ## Les main dans le code
 
@@ -117,7 +117,7 @@ Vous aurez besoin de quelques outils avant de pouvoir commencer à coder votre I
 
 ### Compilation des sources
 
-Les sources du jeu sont écrite en utilisant une syntaxe ES6, pour être complétement sûr de la compatibilité du code, on va utiliser un transpileur pour le convertir en ES5. Pour compiler le code du jeu + celui de votre robot :
+Les sources du jeu sont écrite en utilisant une syntaxe ES6, pour être complétement sûr de la compatibilité du code, on va utiliser un transpileur pour le convertir en ES5. Pour compiler le code du jeu + celui de votre IA :
 
     npm run build
 
