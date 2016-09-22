@@ -29,8 +29,8 @@ var demoIa = {
         let move = {
             action: "move",
             params: {
-                x: Math.round(dx),
-                y: Math.round(dy)
+                dx: Math.round(dx),
+                dy: Math.round(dy)
             }
         };
         let ask = {

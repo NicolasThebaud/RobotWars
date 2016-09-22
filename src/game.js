@@ -49,8 +49,8 @@ function protectIaMethod(subject, methodName) {
 var actions = {
     move: function move(subject, moves, env) {
         var clone = Object.assign({}, subject);
-        if (moves.x === undefined || moves.y === undefined) {
-            return addError(clone, "[MOVE] missing x or y param");
+        if (moves.dx === undefined || moves.dy === undefined) {
+            return addError(clone, "[MOVE] missing dx or dy param");
         }
         for (let i of ["x", "y"]) {
             if (moves[i] !== 0) {

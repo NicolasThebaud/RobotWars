@@ -44,13 +44,13 @@ l'action move permet de vous déplacer sur la map. Voila l'objet que le jeu atte
 {
     action: "move",
     params: {
-        x: 0, //1 mouvement positif, -1 mouvement négatif, 0 aucun mouvement sur cet axe
-        y: 0
+        dx: 0, //1 mouvement positif, -1 mouvement négatif, 0 aucun mouvement sur cet axe
+        dy: 0
     }
 }
 ```
 
-les paramètres `x` et `y` définissent si vous voulez vous déplacer dans le sens positif ou négatif selon l'axe x ou y. Le joueur ne peux que se déplacer que d'une case à la fois, donc mettre une valeur de `10` par exemple ne fera pas avancer plus votre joueur. Le jeu regarde uniquement si la valeur retournée est positive, négative ou nulle.
+les paramètres `dx` et `dy` définissent si vous voulez vous déplacer dans le sens positif ou négatif selon l'axe x ou y. Le joueur ne peux que se déplacer que d'une case à la fois, donc mettre une valeur de `10` par exemple ne fera pas avancer plus votre joueur. Le jeu regarde uniquement si la valeur retournée est positive, négative ou nulle.
 
 ### action `ask`
 
@@ -114,6 +114,7 @@ un exemple d'implémentation serait :
 Le jeu compte les erreurs que vous faites. Parmis les erreurs, le jeu compte : 
 
 - les exceptions qui sont jettées par votre code ;
+- les actions appelées avec les mauvais paramètres (par exemple un appel à `teleport` sans paramètre `x`) ;
 - les mouvements (`move` et `teleport`) en dehors de la carte qui seront demandés (eg. demander à avancer de 1 alors qu'on est en bout de carte).
 
 Dans tous les cas, une erreur va paralyser votre joueur pour le tour en cours.
