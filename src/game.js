@@ -11,6 +11,12 @@ function initPlayer(ia) {
     };
 }
 
+function addError(player, error) {
+    player.errors.push(error);
+    console.error(`[ERROR] ${player.name} -> ${error}`);
+    return player;
+}
+
 function createTeamDispatcher(nbTeams) {
     return function dispatch(player, index) {
         return Object.assign({}, player, {
@@ -34,8 +40,7 @@ function protectIaMethod(subject, methodName) {
         try {
             res = subject.ia[methodName].apply(subject.ia, arguments);
         } catch (e) {
-            console.error(e);
-            subject.errors.push("exception");
+            addError(subject, e.message);
         }
         return res;
     }
@@ -44,6 +49,9 @@ function protectIaMethod(subject, methodName) {
 var actions = {
     move: function move(subject, moves, env) {
         var clone = Object.assign({}, subject);
+        if (moves.x === undefined || moves.y === undefined) {
+            return addError(clone, "[MOVE] missing x or y param");
+        }
         for (let i of ["x", "y"]) {
             if (moves[i] !== 0) {
                 let newPos = clone.position[i] + (moves[i] > 0 ? 1 : -1);
@@ -57,6 +65,9 @@ var actions = {
     teleport: function teleport(subject, position, env) {
         if (subject.tpLeft <= 0) {
             return subject;
+        }
+        if (position.x === undefined || position.y === undefined) {
+            return addError(subject, "[TELEPORT] missing x or y param");
         }
         var clone = { ...subject };
         clone.tpLeft--;
@@ -82,9 +93,10 @@ var actions = {
 };
 
 function execute({ action, params, subject, env }) {
+    if (!action) { return subject; }
     var fn = actions[action];
     if (!fn) {
-        console.warn(`no action ${action}`);
+        addError(subject, `[ACTION] no action ${action}`);
         return subject;
     }
     return fn(subject, params, env);
@@ -99,7 +111,7 @@ function stateChecker(mapSize) {
         newPosition.y = Math.max(Math.min(newPosition.y, maxIndex), 0);
 
         if (newPosition.x !== player.position.x || newPosition.y !== player.position.y) {
-            player.errors.push("out of bound");
+            addError(player, "[MOVE] out of bounds");
         }
         player.position = newPosition;
 
@@ -157,9 +169,9 @@ var game = {
                     .filter(p => p.team === bot.team)
                     .map(p => ({ x: p.position.x, y: p.position.y }));
 
-               let action = protectIaMethod(bot, "action")
-                ( { x: bot.position.x, y: bot.position.y }, state.mapSize, state.round, friendsPosition);
-               return {
+                let action = protectIaMethod(bot, "action")
+                    ({ x: bot.position.x, y: bot.position.y }, state.mapSize, state.round, friendsPosition);
+                return {
                    action: action.action,
                    params: action.params,
                    subject: bot,
