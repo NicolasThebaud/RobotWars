@@ -6,7 +6,7 @@ function initPlayer(ia) {
         },
         name: ia.getName(),
         ia: ia,
-        errors: 0
+        errors: []
     };
 }
 
@@ -34,7 +34,7 @@ function protectIaMethod(subject, methodName) {
             res = subject.ia[methodName].apply(subject.ia, arguments);
         } catch (e) {
             console.error(e);
-            subject.errors++;
+            subject.errors.push("exception");
         }
         return res;
     }
@@ -87,7 +87,7 @@ function stateChecker(mapSize) {
         newPosition.y = Math.max(Math.min(newPosition.y, maxIndex), 0);
 
         if (newPosition.x !== player.position.x || newPosition.y !== player.position.y) {
-            player.errors++;
+            player.errors.push("out of bound");
         }
         player.position = newPosition;
 

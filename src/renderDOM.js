@@ -61,7 +61,7 @@ function render(state) {
         return player => h("tr.player", { class: { winner: winner }}, [
             h("td", [player.name + " "]),
             h("td", [h("span.team", { style: { "background-color": colors[player.team] }})]),
-            h("td.errors", [player.errors + " errors"])
+            h("td.errors", [player.errors.length + " errors"])
         ]);
     }
 
