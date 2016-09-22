@@ -37,7 +37,26 @@ var demoIa = {
             action: "ask",
             params: "x"
         };
-        return round % 2 === 0 ? ask : move;
+        let teleport = {
+            action: "teleport",
+            params: {
+                x: Math.round(Math.random() * mapSize),
+                y: Math.round(Math.random() * mapSize)
+            }
+        }
+        let action;
+        switch (round % 3) {
+            case 0:
+                action = ask;
+                break;
+            case 1:
+                action = move;
+                break;
+            case 2:
+                action = teleport;
+                break;
+        }
+        return action;
     }
 }
 

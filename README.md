@@ -14,6 +14,7 @@ Votre IA pourra répondre l'une de ces deux actions :
 
 - `move`
 - `ask`
+- `teleport`
 
 D'un côté plus technique, le jeu appellera la méthode `action` de votre IA et votre IA devra retourner un objet qui contient les clés `action` (l'identifiant de l'action que vous voulez réaliser) et `params` les paramètres de l'action.
 
@@ -75,6 +76,24 @@ Suite à ça le jeu vous répondra en appelant une méthode de votre IA. Suivant
 }
 ```
 
+### action `teleport`
+
+Vous pouvez vous téléporter à n'importe quel endroit de la map (à condition que ça soit dans les limites de la map bien sur). Pour cela, vous pouvez demander à faire l'action `teleport`. En paramètres, vous aurez à donner la position en `x` et `y` à laquelle vous voulez vous téléporter.
+
+⚠ Vous ne pourrez utiliser l'action `teleport` que 2 fois. Au delà chaque appel à `teleport` ne fera plus rien.
+
+Exemple : 
+
+```javascript
+{
+    action: "teleport",
+    params: {
+        x: x,
+        y: y
+    }
+}
+```
+
 ## Soyez à l'écoute
 
 Petite astuce, quand l'une des IA de votre équipe trouve la sortie, toutes les autres IA de l'équipe sont avertie de la position de la sortie. 
@@ -95,7 +114,7 @@ un exemple d'implémentation serait :
 Le jeu compte les erreurs que vous faites. Parmis les erreurs, le jeu compte : 
 
 - les exceptions qui sont jettées par votre code ;
-- les mouvements en dehors de la carte qui seront demandés (eg. demander à avancer de 1 alors qu'on est en bout de carte).
+- les mouvements (`move` et `teleport`) en dehors de la carte qui seront demandés (eg. demander à avancer de 1 alors qu'on est en bout de carte).
 
 Dans tous les cas, une erreur va paralyser votre joueur pour le tour en cours.
 

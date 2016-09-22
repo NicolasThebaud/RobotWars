@@ -6,7 +6,8 @@ function initPlayer(ia) {
         },
         name: ia.getName(),
         ia: ia,
-        errors: []
+        errors: [],
+        tpLeft: 2
     };
 }
 
@@ -50,6 +51,17 @@ var actions = {
             }
         }
 
+        return clone;
+    },
+
+    teleport: function teleport(subject, position, env) {
+        if (subject.tpLeft <= 0) {
+            return subject;
+        }
+        var clone = { ...subject };
+        clone.tpLeft--;
+        console.log(position);
+        clone.position = position;
         return clone;
     },
 
