@@ -54,7 +54,7 @@ var actions = {
         }
         for (let i of ["x", "y"]) {
             if (moves[i] !== 0) {
-                let newPos = clone.position[i] + (moves[i] > 0 ? 1 : -1);
+                let newPos = clone.position[i] + (moves["d" + i] > 0 ? 1 : -1);
                 clone.position[i] = newPos;
             }
         }
@@ -128,7 +128,7 @@ var game = {
             return acc;
         }, 1);
 
-        const mapSize = Math.max(ias.length * 2, 10);
+        const mapSize = Math.max(ias.length * 2, 20);
 
         const exit = {
             x: Math.floor(Math.random() * mapSize),

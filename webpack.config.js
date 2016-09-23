@@ -8,14 +8,23 @@ module.exports = {
         path: __dirname + "/build",
         filename: "[name].js"
     },
+    eslint: {
+        configFile: "bots.eslintrc"
+    },
     module: {
+        preLoaders: [
+            {
+                test: /src\/bots\/.*\.js$/,
+                loader: "eslint-loader"
+            }
+        ],
         loaders: [
             {
                 test: /src\/.*\.js$/,
-                loader: 'babel',
+                loader: "babel",
                 query: {
-                    presets: ['es2015'],
-                    plugins: ['transform-object-rest-spread']
+                    presets: ["es2015"],
+                    plugins: ["transform-object-rest-spread"]
                 }
             }
         ]

@@ -43,7 +43,7 @@ var demoIa = {
                 x: Math.round(Math.random() * mapSize),
                 y: Math.round(Math.random() * mapSize)
             }
-        }
+        };
         let action;
         switch (round % 3) {
             case 0:
@@ -58,6 +58,6 @@ var demoIa = {
         }
         return action;
     }
-}
+};
 
 module.exports = demoIa;
