@@ -18,7 +18,7 @@ let colors = [
     "rgb(203, 30, 30)",
     "rgb(30, 99, 203)",
     "rgb(47, 180, 38)",
-    "rgb(180, 38, 158)"
+    "rgb(191, 156, 5)"
 ];
 
 function init(mapSize) {
