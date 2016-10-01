@@ -45,6 +45,7 @@ function render(state) {
         .forEach(function (bot) {
             context.fillStyle = colors[bot.team];
             context.font = "15px sans-serif";
+            context.textAlign = "center";
 
             context.beginPath();
             context.arc(
@@ -56,7 +57,7 @@ function render(state) {
                 false
             );
             context.fill();
-            context.fillText(bot.name, bot.position.x * pixelSize, (bot.position.y + 1.5) * pixelSize);
+            context.fillText(bot.name, (bot.position.x + 0.5) * pixelSize, (bot.position.y + 1.7) * pixelSize);
             //context.fillRect(bot.position.x * pixelSize, bot.position.y * pixelSize, pixelSize, pixelSize)
         });
 
