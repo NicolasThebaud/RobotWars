@@ -43,6 +43,7 @@ function render(state) {
         .players
         .forEach(bot => {
             context.fillStyle = colors[bot.team];
+            context.font = "15px sans-serif";
 
             context.beginPath();
             context.arc(
@@ -54,6 +55,7 @@ function render(state) {
                 false
             );
             context.fill();
+            context.fillText(bot.name, bot.position.x * pixelSize, (bot.position.y + 1.5) * pixelSize);
             //context.fillRect(bot.position.x * pixelSize, bot.position.y * pixelSize, pixelSize, pixelSize)
         });
 

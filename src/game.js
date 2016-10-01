@@ -131,8 +131,8 @@ var game = {
         const mapSize = Math.max(ias.length * 2, 20);
 
         const exit = {
-            x: Math.floor(Math.random() * mapSize),
-            y: Math.floor(Math.random() * mapSize)
+            x: Math.round(mapSize / 2) + Math.floor(Math.random() * (mapSize / 2)),
+            y: Math.round(mapSize / 2) + Math.floor(Math.random() * (mapSize / 2))
         }
 
         const players = ias
