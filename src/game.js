@@ -17,6 +17,31 @@ function addError(player, error) {
     return player;
 }
 
+function playerDispatcher(exit, mapSize) {
+    return function dispatch(player) {
+        function getRanPos() {
+            return Math.round(Math.random() * mapSize);
+        }
+
+        function dist(pos, exit) {
+            return Math.sqrt(Math.pow(pos.x - exit.x, 2), Math.pow(pos.y - exit.y, 2));
+        }
+
+        var pos = {
+            x: getRanPos(),
+            y: getRanPos()
+        }
+        while (dist(pos, exit) < mapSize / 4) {
+            pos = {
+                x: getRanPos(),
+                y: getRanPos()
+            }
+        }
+        player.position = pos;
+        return player;
+    };
+}
+
 function createTeamDispatcher(nbTeams) {
     return function dispatch(player, index) {
         return Object.assign({}, player, {
@@ -133,12 +158,13 @@ var game = {
         var mapSize = Math.max(ias.length * 2, 20);
 
         var exit = {
-            x: Math.round(mapSize / 2) + Math.floor(Math.random() * (mapSize / 2)),
-            y: Math.round(mapSize / 2) + Math.floor(Math.random() * (mapSize / 2))
+            x: Math.floor(Math.random() * mapSize),
+            y: Math.floor(Math.random() * mapSize)
         }
 
         var players = ias
             .map(initPlayer)
+            .map(playerDispatcher(exit, mapSize))
             .map(createTeamDispatcher(nbTeams));
 
         var teams = players.reduce(groupByTeam, {});
