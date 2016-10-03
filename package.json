@@ -17,7 +17,7 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/atomrc/robotwar#readme",
   "devDependencies": {
-    "eslint": "^3.5.0",
+    "eslint": "3.0.0",
     "eslint-loader": "^1.5.0",
     "webpack": "^1.13.2"
   },

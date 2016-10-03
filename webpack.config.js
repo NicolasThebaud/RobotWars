@@ -12,12 +12,12 @@ module.exports = {
         configFile: "bots.eslintrc"
     },
     module: {
-        //preLoaders: [
-        //    {
-        //        test: /src\/bots\/.*\.js$/,
-        //        loader: "eslint-loader"
-        //    }
-        //]
+        preLoaders: [
+            {
+                test: /src\/bots\/.*\.js$/,
+                loader: "eslint-loader"
+            }
+        ]
     },
     plugins: []
 }
