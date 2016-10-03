@@ -20,7 +20,7 @@ function addError(player, error) {
 function playerDispatcher(exit, mapSize) {
     return function dispatch(player) {
         function getRanPos() {
-            return Math.round(Math.random() * mapSize);
+            return Math.round(Math.random() * (mapSize - 1));
         }
 
         function dist(pos, exit) {
@@ -158,8 +158,8 @@ var game = {
         var mapSize = Math.max(ias.length * 2, 20);
 
         var exit = {
-            x: Math.floor(Math.random() * mapSize),
-            y: Math.floor(Math.random() * mapSize)
+            x: Math.floor(Math.random() * (mapSize - 1)),
+            y: Math.floor(Math.random() * (mapSize - 1))
         }
 
         var players = ias
