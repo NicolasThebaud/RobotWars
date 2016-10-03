@@ -1,20 +1,21 @@
-import snabbdom from "snabbdom";
-import h from "snabbdom/h";
-import classes from "snabbdom/modules/class";
-import style from "snabbdom/modules/style";
+/* global require, module */
+var snabbdom = require("snabbdom");
+var h = require("snabbdom/h");
+var classes = require("snabbdom/modules/class");
+var style = require("snabbdom/modules/style");
 
-let context;
-let playersInfoPanel;
-const pixelSize = 20;
+var context;
+var playersInfoPanel;
+var pixelSize = 20;
 
-let previousDOM;
+var previousDOM;
 
-const patch = snabbdom.init([
+var patch = snabbdom.init([
     classes,
     style
 ]);
 
-let colors = [
+var colors = [
     "rgb(203, 30, 30)",
     "rgb(30, 99, 203)",
     "rgb(47, 180, 38)",
@@ -22,7 +23,7 @@ let colors = [
 ];
 
 function init(mapSize) {
-    const container = document.getElementById("main");
+    var container = document.getElementById("main");
     context = container.getContext("2d");
     playersInfoPanel = document.getElementById("players-info")
 
@@ -41,7 +42,7 @@ function render(state) {
 
     state
         .players
-        .forEach(bot => {
+        .forEach(function (bot) {
             context.fillStyle = colors[bot.team];
             context.font = "15px sans-serif";
 
@@ -60,14 +61,16 @@ function render(state) {
         });
 
     function playerRenderer(winner) {
-        return player => h("tr.player", { class: { winner: winner }}, [
-            h("td", [player.name + " "]),
-            h("td", [h("span.team", { style: { "background-color": colors[player.team] }})]),
-            h("td.errors", [player.errors.length + " errors"])
-        ]);
+        return function (player) {
+            return h("tr.player", { class: { winner: winner }}, [
+                h("td", [player.name + " "]),
+                h("td", [h("span.team", { style: { "background-color": colors[player.team] }})]),
+                h("td.errors", [player.errors.length + " errors"])
+            ]);
+        };
     }
 
-    const playersInfo = h(
+    var playersInfo = h(
         "table",
         [h("tbody", []
             .concat(state.winners.map(playerRenderer(true)))
@@ -75,16 +78,14 @@ function render(state) {
         )]
     );
 
-    let dom = previousDOM ? previousDOM : playersInfoPanel;
+    var dom = previousDOM ? previousDOM : playersInfoPanel;
 
     previousDOM = patch(dom, playersInfo);
 
     if (state.winner) {
-        let congrats = document.createElement("div");
+        var congrats = document.createElement("div");
         congrats.id = "congrats";
-        congrats.innerHTML = `<div class="middle">
-            <span class="team" style="background-color: ${colors[state.winner]}"></span> Win!
-        </div>`;
+        congrats.innerHTML = "<div class=\"middle\"><span class=\"team\" style=\"background-color:" + colors[state.winner] + "\"></span> Win! </div>";
 
         document.getElementById("canvas").appendChild(congrats);
     }

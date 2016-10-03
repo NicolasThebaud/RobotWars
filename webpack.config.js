@@ -17,16 +17,6 @@ module.exports = {
                 test: /src\/bots\/.*\.js$/,
                 loader: "eslint-loader"
             }
-        ],
-        loaders: [
-            {
-                test: /src\/.*\.js$/,
-                loader: "babel",
-                query: {
-                    presets: ["es2015"],
-                    plugins: ["transform-object-rest-spread"]
-                }
-            }
         ]
     },
     plugins: []

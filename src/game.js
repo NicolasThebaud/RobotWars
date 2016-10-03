@@ -69,7 +69,7 @@ var actions = {
         if (position.x === undefined || position.y === undefined) {
             return addError(subject, "[TELEPORT] missing x or y param");
         }
-        var clone = { ...subject };
+        var clone = Object.assign({}, subject);
         clone.tpLeft--;
         console.log(position);
         clone.position = position;
