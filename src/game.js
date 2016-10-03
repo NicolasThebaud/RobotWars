@@ -55,7 +55,7 @@ var actions = {
         for (let i of ["x", "y"]) {
             if (moves[i] !== 0) {
                 let newPos = clone.position[i] + (moves["d" + i] > 0 ? 1 : -1);
-                clone.position[i] = newPos;
+                clone.position[i] = Math.round(newPos);
             }
         }
 
@@ -71,8 +71,10 @@ var actions = {
         }
         var clone = Object.assign({}, subject);
         clone.tpLeft--;
-        console.log(position);
-        clone.position = position;
+        clone.position = {
+            x: Math.round(position.x),
+            y: Math.round(position.y)
+        };
         return clone;
     },
 
