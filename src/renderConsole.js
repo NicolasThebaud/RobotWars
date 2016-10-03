@@ -25,7 +25,10 @@ function render(state) {
     if (state.winner) {
         console.log(state.winner + " team wins");
     }
-    console.log(state.players.map(player => player.name + " " + player.errors + " errors"));
+    console.log(state.players.map(player => player.name + " " + player.errors.length + " errors"));
 }
 
-module.exports = render;
+module.exports = {
+    init: function () {},
+    render: render,
+};
