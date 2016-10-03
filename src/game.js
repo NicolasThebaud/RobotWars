@@ -53,7 +53,7 @@ var actions = {
             return addError(clone, "[MOVE] missing dx or dy param");
         }
         for (let i of ["x", "y"]) {
-            if (moves[i] !== 0) {
+            if (moves["d" + i] !== 0) {
                 let newPos = clone.position[i] + (moves["d" + i] > 0 ? 1 : -1);
                 clone.position[i] = Math.round(newPos);
             }
