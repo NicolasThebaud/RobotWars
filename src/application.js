@@ -1,9 +1,9 @@
-const game = require("./game");
-const renderConsole = require("./renderConsole");
-const renderDOM = require("./renderDOM");
+var game = require("./game");
+var renderConsole = require("./renderConsole");
+var renderDOM = require("./renderDOM");
 
-const req = require.context("./bots", true, /^(.*\.(js$))$/igm);
-const ias = req.keys().map(function(key) {
+var req = require.context("./bots", true, /^(.*\.(js$))$/igm);
+var ias = req.keys().map(function(key) {
     return req(key);
 });
 

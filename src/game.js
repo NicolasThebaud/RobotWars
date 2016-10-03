@@ -121,25 +121,25 @@ function stateChecker(mapSize) {
 
 var game = {
     init: function (ias) {
-        const nbTeams = [2, 3, 4].reduce((acc, val) => {
+        var nbTeams = [2, 3, 4].reduce((acc, val) => {
             if (ias.length % val === 0 || ias.length % val === 1) {
                 return val;
             }
             return acc;
         }, 1);
 
-        const mapSize = Math.max(ias.length * 2, 20);
+        var mapSize = Math.max(ias.length * 2, 20);
 
-        const exit = {
+        var exit = {
             x: Math.round(mapSize / 2) + Math.floor(Math.random() * (mapSize / 2)),
             y: Math.round(mapSize / 2) + Math.floor(Math.random() * (mapSize / 2))
         }
 
-        const players = ias
+        var players = ias
             .map(initPlayer)
             .map(createTeamDispatcher(nbTeams));
 
-        const teams = players.reduce(groupByTeam, {});
+        var teams = players.reduce(groupByTeam, {});
 
         return {
             players: players,
@@ -162,7 +162,7 @@ var game = {
         function isWinner(exit) {
             return (player) => player.position.x === exit.x && player.position.y === exit.y;
         }
-        const updatedPlayers = state
+        var updatedPlayers = state
             .players
             .map(bot => {
                 let friendsPosition = state.players
@@ -181,7 +181,7 @@ var game = {
             .map(execute)
             .map(stateChecker(state.mapSize));
 
-        const roundWinners = updatedPlayers
+        var roundWinners = updatedPlayers
             .filter(isWinner(state.exit))
 
         roundWinners.forEach((winner) => {
@@ -190,12 +190,12 @@ var game = {
             });
         });
 
-        const winners = state.winners.concat(roundWinners);
+        var winners = state.winners.concat(roundWinners);
 
-        const winnersByTeam = winners.reduce(groupByTeam, {});
+        var winnersByTeam = winners.reduce(groupByTeam, {});
 
-        const winningTeam = Object.keys(winnersByTeam).reduce(function (winningTeam, team) {
-            const won = winnersByTeam[team].length === state.teams[team].length;
+        var winningTeam = Object.keys(winnersByTeam).reduce(function (winningTeam, team) {
+            var won = winnersByTeam[team].length === state.teams[team].length;
             return winningTeam || (won ? team : false);
         }, false);
 
