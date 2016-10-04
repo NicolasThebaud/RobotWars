@@ -11,6 +11,11 @@ function initPlayer(ia) {
     };
 }
 
+function dist(a, b) {
+    return Math.sqrt(Math.pow(a.x - b.x, 2), Math.pow(a.y - b.y, 2));
+}
+
+
 function addError(player, error) {
     player.errors.push(error);
     console.error(`[ERROR] ${player.name} -> ${error}`);
@@ -21,10 +26,6 @@ function playerDispatcher(exit, mapSize) {
     return function dispatch(player) {
         function getRanPos() {
             return Math.round(Math.random() * (mapSize - 1));
-        }
-
-        function dist(pos, exit) {
-            return Math.sqrt(Math.pow(pos.x - exit.x, 2), Math.pow(pos.y - exit.y, 2));
         }
 
         var pos = {
@@ -96,6 +97,14 @@ var actions = {
         }
         var clone = Object.assign({}, subject);
         clone.tpLeft--;
+
+        var distFromExit = dist(position, env.exit);
+        if (distFromExit === 0) {
+            position = {
+                x: env.mapSize - env.exit.x - 1,
+                y: env.mapSize - env.exit.y - 1
+            };
+        }
         clone.position = {
             x: Math.round(position.x),
             y: Math.round(position.y)
