@@ -17,6 +17,7 @@ function dist(a, b) {
 
 function addError(player, error) {
     player.errors.push(error);
+    player.currentAction = "error";
     console.error(`[ERROR] ${player.name} -> ${error}`);
     return player;
 }
@@ -134,6 +135,7 @@ function execute({ action, params, subject, env }) {
         addError(subject, `[ACTION] no action ${action}`);
         return subject;
     }
+    subject.currentAction = action;
     return fn(subject, params, env);
 }
 

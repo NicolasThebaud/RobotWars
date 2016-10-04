@@ -58,13 +58,32 @@ function render(state) {
             );
             context.fill();
             context.fillText(bot.name, (bot.position.x + 0.5) * pixelSize, (bot.position.y + 1.7) * pixelSize);
+            if (bot.currentAction) {
+                context.fillStyle = "black";
+                var icons = {
+                    move: "\uf047",
+                    ask: "\uf128",
+                    teleport: "\uf0e7",
+                    error: "\uf00d"
+                };
+                context.font = "20px FontAwesome";
+                context.fillText(icons[bot.currentAction], (bot.position.x + 1) * pixelSize, bot.position.y * pixelSize);
+            }
+
             //context.fillRect(bot.position.x * pixelSize, bot.position.y * pixelSize, pixelSize, pixelSize)
         });
 
     function playerRenderer(winner) {
+        var icons = {
+            move: "\uf047",
+            ask: "\uf128",
+            teleport: "\uf0e7",
+            error: "\uf00d"
+        };
         return function (player) {
             return h("tr.player", { class: { winner: winner }}, [
                 h("td", [player.name + " "]),
+                h("td", { style: { fontFamily: "FontAwesome" }}, [icons[player.currentAction] || ""]),
                 h("td", [h("span.team", { style: { "background-color": colors[player.team] }})]),
                 h("td.errors", [player.errors.length + " errors"])
             ]);
