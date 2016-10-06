@@ -209,6 +209,12 @@ var game = {
 
                 let action = protectIaMethod(bot, "action")
                     ({ x: bot.position.x, y: bot.position.y }, state.mapSize, state.round, friendsPosition);
+
+                action = action || {
+                    action: "error",
+                    params: {}
+                };
+
                 return {
                    action: action.action,
                    params: action.params,
@@ -224,7 +230,7 @@ var game = {
 
         roundWinners.forEach((winner) => {
             state.teams[winner.team].forEach((player) => {
-                protectIaMethod(player, "onFriendWins")(state.exit);
+                protectIaMethod(player, "onFriendWins")({ x: state.exit.x, y: state.exit.y });
             });
         });
 

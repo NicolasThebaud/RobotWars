@@ -11,6 +11,10 @@
         "sourceType": "module"
     },
     "rules": {
-        "no-console": 0
+        "no-console": 0,
+        "no-mixed-spaces-and-tabs": 0,
+        "no-unused-vars": 0,
+        "no-dupe-keys": 0,
+        "no-unused-labels": 0
     }
 }
