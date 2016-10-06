@@ -1,5 +1,7 @@
 # RobotWars
 
+![](http://i.giphy.com/qoxM1gi6i0V9e.gif)
+
 Note: This game was originally developped by [Atomrc](https://github.com/atomrc)
 It was developped for a JS lecture, at 'IUT de Nantes' (France)
 
