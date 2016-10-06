@@ -1,0 +1,27 @@
+{
+  "name": "robotwar",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server",
+    "build": "webpack --progress",
+    "watch": "webpack --watch --progress"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/atomrc/robotwar.git"
+  },
+  "author": "atomrc",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/atomrc/robotwar#readme",
+  "devDependencies": {
+    "eslint": "3.0.0",
+    "eslint-loader": "^1.5.0",
+    "webpack": "^1.13.2"
+  },
+  "dependencies": {
+    "snabbdom": "^0.5.3"
+  }
+}
