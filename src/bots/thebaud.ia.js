@@ -9,9 +9,24 @@ var AI = function() {
 		},
 		shouldGoUp: true,
 		moves: {
-			"BASE_MV": {action: "move", params: { dx: -1, dy: 0 }},
-			"BASE_MV_UP": {action: "move", params: { dx: 0, dy: -1 }},
-			"BASE_ASK_Y": {action: "ask", params: "y"}
+			"BASE_MV": {
+				action: "move", 
+				params: { 
+					dx: -1, 
+					dy: 0 
+				}
+			},
+			"BASE_MV_UP": {
+				action: "move", 
+				params: { 
+					dx: 0, 
+					dy: -1 
+				}
+			},
+			"BASE_ASK_Y": {
+				action: "ask", 
+				params: "y"
+			}
 		},
 		getStartTP: function(mapSize) {
 			return {
