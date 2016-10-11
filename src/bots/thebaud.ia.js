@@ -1,23 +1,91 @@
 /* Author: Nicolas THEBAUD*/
-var AI = {
-	win: {prewin: true,b:false, pos:{}},
-	up: true,
-	getName: function() { return "Nico" },
-	onFriendWins: function(pos) { Object.assign(this.win, {prewin: true, b: true, pos: pos}) },
-	onResponseY: function (pos) { this.up = !(pos==0) },
-	action: function (pos, size, round) {
-		let action = {}
-		if(this.win.b) {
-			let flag = this.win.pos.x==0
-			if(this.win.prewin) action = {action: "teleport", params: {x: flag ? this.win.pos.x+1 : this.win.pos.x-1, y: this.win.pos.y}}, this.win.prewin=false
-			else action = {action: "move", params: {dx: flag ? -1 : 1, dy: 0}}
+var AI = function() {
+	var privateProps = new WeakMap()
+	privateProps.set(this, {
+		winData: {
+			prewin_turn: true,
+			winningCondition: false, 
+			pos:{}
+		},
+		shouldGoUp: true,
+		moves: {
+			"BASE_MV": {action: "move", params: { dx: -1, dy: 0 }},
+			"BASE_MV_UP": {action: "move", params: { dx: 0, dy: -1 }},
+			"BASE_ASK_Y": {action: "ask", params: "y"}
+		},
+		getStartTP: function(mapSize) {
+			return {
+				action: "teleport", 
+				params: {
+					x: mapSize-1, 
+					y: mapSize-1
+				}
+			}
+		},
+		getWinTP: function(isDoorLeftmost) {
+			return {
+				action: "teleport", 
+				params: {
+					x: isDoorLeftmost ? this.winData.pos.x+1 : this.winData.pos.x-1, 
+					y: this.winData.pos.y
+				}
+			}
+		},
+		getWinMove: function(isDoorLeftmost) {
+			return {
+				action: "move", 
+				params: {
+					dx: isDoorLeftmost ? -1 : 1, 
+					dy: 0
+				}
+			}
 		}
-		else if(round==0) action = {action: "teleport", params: {x: size-1, y: size-1}}
-		else switch(round%2) {
-			case 0: action = {action: "move", params: this.up ? { dx: 0, dy: -1 } : { dx: -1, dy: 0 }}; break;
-			case 1: action = {action: "ask", params: this.up ? "y" : "X"}; break;
+	})
+
+	this.getName = function getName() { 
+		return "Nico" 
+	}
+
+	this.onFriendWins = function onFriendWins(pos) {
+		Object.assign(privateProps.get(this).winData, {
+			prewin_turn: true, 
+			winningCondition: true, 
+			pos: pos
+		}) 
+	}
+
+	this.onResponseY = function onResponseY(pos) { 
+		privateProps.get(this).shouldGoUp = !(pos==0) 
+	}
+
+	this.action = function action(pos, mapSize, round) {
+		let action = {},
+			instance = privateProps.get(this),
+			winData = instance.winData,
+			moves = instance.moves
+
+		if(winData.winningCondition) {
+			let isDoorLeftmost = winData.pos.x==0
+			if(winData.prewin_turn) {
+				action = instance.getWinTP(isDoorLeftmost)
+				winData.prewin_turn = false
+			} else {
+				action = instance.getWinMove(isDoorLeftmost)
+			}
+		} else if(round==0) {
+			action = instance.getStartTP(mapSize)
+		} else {
+			switch(round%2) {
+				case 0: 
+					action = instance.shouldGoUp ? moves.BASE_MV_UP : moves.BASE_MV
+					break;
+				case 1: 
+					action = instance.shouldGoUp ? moves.BASE_ASK_Y : moves.BASE_MV
+					break;
+			}
 		}
 		return action
 	}
 }
-module.exports = AI
+
+module.exports = new AI()
