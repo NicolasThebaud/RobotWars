@@ -1,3 +1,15 @@
+var polyfills = {
+	random_polyfill: Math.random,
+	round_polyfill: Math.round,
+	sqrt_polyfill: Math.sqrt,
+	pow_polyfill: Math.pow,
+	max_polyfill: Math.max,
+	min_polyfill: Math.min,
+	floor_polyfill: Math.floor,
+	assign_polyfill: Object.assign,
+	keys_polyfill: Object.keys
+}
+
 function initPlayer(ia) {
     return {
         position: {
@@ -12,12 +24,11 @@ function initPlayer(ia) {
 }
 
 function dist(a, b) {
-    return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+    return polyfills.sqrt_polyfill(polyfills.pow_polyfill(a.x - b.x, 2) + polyfills.pow_polyfill(a.y - b.y, 2));
 }
 
 function addError(player, error) {
     player.errors.push(error);
-    player.currentAction = "error";
     console.error(`[ERROR] ${player.name} -> ${error}`);
     return player;
 }
@@ -25,7 +36,7 @@ function addError(player, error) {
 function playerDispatcher(exit, mapSize) {
     return function dispatch(player) {
         function getRanPos() {
-            return Math.round(Math.random() * (mapSize - 1));
+            return polyfills.round_polyfill(polyfills.random_polyfill() * (mapSize - 1));
         }
 
         var pos = {
@@ -45,7 +56,7 @@ function playerDispatcher(exit, mapSize) {
 
 function createTeamDispatcher(nbTeams) {
     return function dispatch(player, index) {
-        return Object.assign({}, player, {
+        return polyfills.assign_polyfill({}, player, {
             team: index % nbTeams
         });
     };
@@ -74,14 +85,14 @@ function protectIaMethod(subject, methodName) {
 
 var actions = {
     move: function move(subject, moves, env) {
-        var clone = Object.assign({}, subject);
+        var clone = polyfills.assign_polyfill({}, subject);
         if (moves.dx === undefined || moves.dy === undefined) {
             return addError(clone, "[MOVE] missing dx or dy param");
         }
         for (let i of ["x", "y"]) {
             if (moves["d" + i] !== 0) {
                 let newPos = clone.position[i] + (moves["d" + i] > 0 ? 1 : -1);
-                clone.position[i] = Math.round(newPos);
+                clone.position[i] = polyfills.round_polyfill(newPos);
             }
         }
 
@@ -95,7 +106,7 @@ var actions = {
         if (position.x === undefined || position.y === undefined) {
             return addError(subject, "[TELEPORT] missing x or y param");
         }
-        var clone = Object.assign({}, subject);
+        var clone = polyfills.assign_polyfill({}, subject);
         clone.tpLeft--;
 
         var distFromExit = dist(position, env.exit);
@@ -106,8 +117,8 @@ var actions = {
             };
         }
         clone.position = {
-            x: Math.round(position.x),
-            y: Math.round(position.y)
+            x: polyfills.round_polyfill(position.x),
+            y: polyfills.round_polyfill(position.y)
         };
         return clone;
     },
@@ -135,17 +146,16 @@ function execute({ action, params, subject, env }) {
         addError(subject, `[ACTION] no action ${action}`);
         return subject;
     }
-    subject.currentAction = action;
     return fn(subject, params, env);
 }
 
 function stateChecker(mapSize) {
     return function checkState(player) {
-        let newPosition = Object.assign({}, player.position);
+        let newPosition = polyfills.assign_polyfill({}, player.position);
         let maxIndex = mapSize - 1;
 
-        newPosition.x = Math.max(Math.min(newPosition.x, maxIndex), 0);
-        newPosition.y = Math.max(Math.min(newPosition.y, maxIndex), 0);
+        newPosition.x = polyfills.max_polyfill(polyfills.min_polyfill(newPosition.x, maxIndex), 0);
+        newPosition.y = polyfills.max_polyfill(polyfills.min_polyfill(newPosition.y, maxIndex), 0);
 
         if (newPosition.x !== player.position.x || newPosition.y !== player.position.y) {
             addError(player, "[MOVE] out of bounds");
@@ -165,11 +175,11 @@ var game = {
             return acc;
         }, 1);
 
-        var mapSize = Math.max(ias.length * 2, 20);
+        var mapSize = polyfills.max_polyfill(ias.length * 2, 20);
 
         var exit = {
-            x: Math.floor(Math.random() * (mapSize - 1)),
-            y: Math.floor(Math.random() * (mapSize - 1))
+            x: polyfills.floor_polyfill(polyfills.random_polyfill() * (mapSize - 1)),
+            y: polyfills.floor_polyfill(polyfills.random_polyfill() * (mapSize - 1))
         }
 
         var players = ias
@@ -209,12 +219,6 @@ var game = {
 
                 let action = protectIaMethod(bot, "action")
                     ({ x: bot.position.x, y: bot.position.y }, state.mapSize, state.round, friendsPosition);
-
-                action = action || {
-                    action: "error",
-                    params: {}
-                };
-
                 return {
                    action: action.action,
                    params: action.params,
@@ -230,7 +234,7 @@ var game = {
 
         roundWinners.forEach((winner) => {
             state.teams[winner.team].forEach((player) => {
-                protectIaMethod(player, "onFriendWins")({ x: state.exit.x, y: state.exit.y });
+                protectIaMethod(player, "onFriendWins")(state.exit);
             });
         });
 
@@ -238,12 +242,12 @@ var game = {
 
         var winnersByTeam = winners.reduce(groupByTeam, {});
 
-        var winningTeam = Object.keys(winnersByTeam).reduce(function (winningTeam, team) {
+        var winningTeam = polyfills.keys_polyfill(winnersByTeam).reduce(function (winningTeam, team) {
             var won = winnersByTeam[team].length === state.teams[team].length;
             return winningTeam || (won ? team : false);
         }, false);
 
-        return Object.assign({}, state, {
+        return polyfills.assign_polyfill({}, state, {
             players: updatedPlayers.filter(not(isWinner(state.exit))),
             winners: winners,
             winnersByTeam: winnersByTeam,
